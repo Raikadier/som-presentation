@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-deep: #04040f;
+  --bg-surface: #0d0d2b;
+  --bg-card: #13133a;
+  --primary: #6366f1;
+  --secondary: #8b5cf6;
+  --accent: #f59e0b;
+  --class-a: #10b981;
+  --class-b: #f43f5e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-deep);
+  color: #f1f5f9;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Glow utilities */
+.glow-indigo { box-shadow: 0 0 20px rgba(99,102,241,0.4); }
+.glow-emerald { box-shadow: 0 0 20px rgba(16,185,129,0.4); }
+.glow-rose { box-shadow: 0 0 20px rgba(244,63,94,0.4); }
+.glow-violet { box-shadow: 0 0 20px rgba(139,92,246,0.4); }
+.glow-amber { box-shadow: 0 0 20px rgba(245,158,11,0.4); }
+
+/* Formula highlight classes */
+.formula-primary { color: #6366f1; }
+.formula-accent { color: #f59e0b; }
+.formula-a { color: #10b981; }
+.formula-b { color: #f43f5e; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* KaTeX overrides */
+.katex {
+  color: #f1f5f9;
+  font-size: 1.1em;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-amber {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Particle animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(99,102,241,0.3); }
+  50% { box-shadow: 0 0 30px rgba(99,102,241,0.7); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Card styles */
+.glass-card {
+  background: rgba(13, 13, 43, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  transition: width 0.4s ease;
+}
