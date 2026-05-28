@@ -105,3 +105,38 @@ body {
   background: linear-gradient(90deg, #6366f1, #8b5cf6);
   transition: width 0.4s ease;
 }
+
+/* ── Mobile / touch ──────────────────────────────────────────── */
+
+/* Prevent double-tap zoom on buttons */
+button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent overscroll / pull-to-refresh on the main app */
+html, body, #root {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Make the whole app non-selectable to improve swipe UX */
+#root {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Responsive font scaling (mobile) */
+@media (max-width: 640px) {
+  .text-4xl { font-size: 1.6rem !important; }
+  .text-2xl { font-size: 1.1rem !important; }
+  .px-12    { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .px-10    { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+  .gap-7    { gap: 0.75rem !important; }
+  .gap-8    { gap: 0.75rem !important; }
+}
+
+/* Three.js canvas — allow touch navigation inside */
+canvas {
+  touch-action: none;
+}

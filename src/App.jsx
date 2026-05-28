@@ -145,7 +145,8 @@ export default function App() {
   const [laserOn,       setLaserOn]       = useState(false)
   const [presenterMode, setPresenterMode] = useState(false)
 
-  const laserDotRef = useRef(null)
+  const laserDotRef  = useRef(null)
+  const touchStartRef = useRef({ x: 0, y: 0, t: 0 })
 
   /* navigation */
   const goTo = useCallback((idx, dir) => {
@@ -167,6 +168,24 @@ export default function App() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
+  }, [current, goTo])
+
+  /* ── touch swipe navigation ── */
+  const handleTouchStart = useCallback((e) => {
+    const t = e.touches[0]
+    touchStartRef.current = { x: t.clientX, y: t.clientY, t: Date.now() }
+  }, [])
+
+  const handleTouchEnd = useCallback((e) => {
+    const t   = e.changedTouches[0]
+    const dx  = t.clientX - touchStartRef.current.x
+    const dy  = t.clientY - touchStartRef.current.y
+    const dt  = Date.now() - touchStartRef.current.t
+    /* qualify: fast enough (<600ms), wide enough (>55px), more horiz than vert */
+    if (dt < 600 && Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+      if (dx < 0) goTo(current + 1,  1)
+      else        goTo(current - 1, -1)
+    }
   }, [current, goTo])
 
   /* laser cursor style */
@@ -191,6 +210,8 @@ export default function App() {
       className="w-screen h-screen overflow-hidden relative"
       style={{ background: '#04040f' }}
       onMouseMove={onMouseMove}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* ── Neural particle background (all slides) ── */}
       <NeuralBackground />
@@ -248,15 +269,23 @@ export default function App() {
       {current > 0 && (
         <button
           onClick={() => goTo(current - 1, -1)}
-          className="absolute left-3 top-1/2 -translate-y-1/2 z-50 w-8 h-8 flex items-center justify-center rounded-full text-slate-600 hover:text-slate-300 transition-colors"
-          style={{ background: 'rgba(13,13,43,0.6)' }}
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-50 flex items-center justify-center rounded-full text-slate-500 hover:text-slate-200 active:scale-90 transition-all"
+          style={{
+            background: 'rgba(13,13,43,0.72)',
+            border: '1px solid rgba(99,102,241,0.20)',
+            width: 44, height: 44, fontSize: 22,
+          }}
         >‹</button>
       )}
       {current < SLIDES.length - 1 && (
         <button
           onClick={() => goTo(current + 1, 1)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 z-50 w-8 h-8 flex items-center justify-center rounded-full text-slate-600 hover:text-slate-300 transition-colors"
-          style={{ background: 'rgba(13,13,43,0.6)' }}
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-50 flex items-center justify-center rounded-full text-slate-500 hover:text-slate-200 active:scale-90 transition-all"
+          style={{
+            background: 'rgba(13,13,43,0.72)',
+            border: '1px solid rgba(99,102,241,0.20)',
+            width: 44, height: 44, fontSize: 22,
+          }}
         >›</button>
       )}
 
@@ -272,18 +301,22 @@ export default function App() {
       </div>
 
       {/* ── Dot nav — bottom center ── */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-50 flex gap-1">
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-50 flex gap-1 items-center"
+        style={{ padding: '4px 6px' }}>
         {SLIDES.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
             className="rounded-full transition-all duration-300"
+            /* padding creates a larger touch target (44px+ tall zone) */
             style={{
-              width:      i === current ? 16 : 5,
-              height:     5,
+              width:      i === current ? 18 : 6,
+              height:     6,
+              padding:    '8px 0',
               background: i === current ? '#6366f1'
                         : i < current  ? '#8b5cf650'
                         : '#1e1e4d',
+              /* actual visual height is 6px but touch target is 6+16=22px → total row 22px */
             }}
           />
         ))}
